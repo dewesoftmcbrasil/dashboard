@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEWESoft MC Brasil 2026 &mdash; Dashboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+:root{
+  --or:#F15D2D; --bg:#0D0D0D; --bg2:#161616; --card:#1C1C1C;
+  --card2:#232323; --line:#2A2A2A; --paper:#FFFFFF; --dim:#A7A7A7;
+  --mute:#5C5852; --green:#2D8A4E; --yellow:#C89A00;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--paper);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+
+/* TOP BAR */
+.topbar{background:#0A0A0A;border-bottom:1px solid var(--line);padding:0 28px;height:48px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.tb-brand{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;letter-spacing:.04em;color:var(--or)}
+.tb-title{font-size:12px;font-weight:600;color:var(--dim);letter-spacing:.06em;text-transform:uppercase}
+.tb-ts{font-size:11px;color:var(--mute)}
+
+/* COUNTDOWN BAND */
+.countdown{background:var(--or);padding:16px 28px;display:flex;align-items:center;gap:32px}
+.cd-num{font-family:'Barlow Condensed',sans-serif;font-size:52px;font-weight:900;color:#fff;line-height:1}
+.cd-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.7)}
+.cd-sep{width:1px;height:48px;background:rgba(255,255,255,.3)}
+.cd-info h2{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.02em}
+.cd-info p{font-size:13px;color:rgba(255,255,255,.8);margin-top:2px}
+
+/* LAYOUT */
+.main{padding:20px 28px;display:flex;flex-direction:column;gap:20px}
+.section-label{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--or);padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.card-head{padding:14px 16px 10px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
+.card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--dim)}
+.card-badge{font-size:10.5px;font-weight:700;color:var(--or);background:rgba(241,93,45,.12);border:1px solid rgba(241,93,45,.25);padding:2px 9px;border-radius:999px}
+.card-body{padding:14px 16px}
+
+/* KPI CARDS */
+.kpi-card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+.kpi-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);margin-bottom:8px}
+.kpi-value{font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:900;color:var(--paper);line-height:1}
+.kpi-value .unit{font-size:20px;font-weight:700;color:var(--dim)}
+.kpi-sub{font-size:11.5px;color:var(--dim);margin-top:6px}
+
+/* BIG KPI */
+.big-kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px}
+.bk-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--mute);margin-bottom:10px}
+.bk-value{font-family:'Barlow Condensed',sans-serif;font-size:48px;font-weight:900;color:var(--paper);line-height:1}
+.bk-sub{font-size:12px;color:var(--dim);margin-top:6px}
+.bk-bar-wrap{margin-top:12px;background:var(--line);border-radius:4px;height:5px}
+.bk-bar{height:5px;border-radius:4px;transition:width .8s}
+.bk-footer{display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--mute)}
+
+/* PROGRESS BAR */
+.bar-wrap{background:var(--line);border-radius:4px;height:6px;overflow:hidden}
+.bar{height:6px;border-radius:4px;transition:width .8s}
+
+/* TABLES */
+.dtable{width:100%;border-collapse:collapse;font-size:12.5px}
+.dtable thead th{padding:7px 10px;background:var(--card2);color:var(--mute);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;text-align:left}
+.dtable thead th:not(:first-child){text-align:right}
+.dtable tbody td{padding:9px 10px;border-bottom:1px solid var(--line);color:var(--dim);vertical-align:top}
+.dtable tbody td:not(:first-child){text-align:right}
+.dtable tbody tr:last-child td{border:none}
+.dtable .or{color:var(--or);font-weight:700}
+.dtable .wh{color:var(--paper);font-weight:600}
+
+/* QUICK BARS */
+.qbar-item{margin-bottom:12px}
+.qbar-head{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+.qbar-lbl{color:var(--dim)}
+.qbar-val{color:var(--paper);font-weight:700}
+.qbar-bg{background:var(--line);border-radius:4px;height:7px}
+.qbar-fill{height:7px;border-radius:4px;transition:width .7s}
+
+/* TAG badges */
+.tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:4px}
+.tag-auto{background:rgba(241,93,45,.15);color:var(--or);border:1px solid rgba(241,93,45,.3)}
+.tag-ind{background:rgba(93,141,241,.15);color:#5D8DF1;border:1px solid rgba(93,141,241,.3)}
+.tag-aero{background:rgba(93,241,153,.15);color:#5DF199;border:1px solid rgba(93,241,153,.3)}
+.tag-acad{background:rgba(241,213,93,.15);color:#F1D55D;border:1px solid rgba(241,213,93,.3)}
+.tag-tbc{background:rgba(100,100,100,.2);color:var(--dim);border:1px solid var(--line)}
+.tag-ok{background:rgba(45,138,78,.2);color:#4DB86A;border:1px solid rgba(45,138,78,.35)}
+
+/* TASK ITEMS */
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.task-item:last-child{border:none}
+.task-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.task-text{font-size:13px;color:var(--paper)}
+.task-sub{font-size:11px;color:var(--mute);margin-top:2px}
+.task-badge{margin-left:auto;flex-shrink:0;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px}
+.badge-and{background:rgba(200,154,0,.2);color:#F1C40F;border:1px solid rgba(200,154,0,.3)}
+.badge-ag{background:rgba(93,141,241,.2);color:#5D8DF1;border:1px solid rgba(93,141,241,.3)}
+
+/* CHECKLIST STATUS BADGES */
+.cl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.cl-item{background:var(--card2);border-radius:7px;padding:10px 12px;border:1px solid var(--line)}
+.cl-val{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;line-height:1}
+.cl-lbl{font-size:10.5px;color:var(--mute);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+
+/* PALESTRANTES */
+.sp-list{display:flex;flex-direction:column;gap:8px}
+.sp-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.sp-item:last-child{border:none}
+.sp-avatar{width:34px;height:34px;border-radius:50%;background:var(--or);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff;flex-shrink:0}
+.sp-name{font-size:13px;font-weight:600;color:var(--paper)}
+.sp-role{font-size:11px;color:var(--mute)}
+.sp-status{margin-left:auto;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;flex-shrink:0}
+.st-ok{background:rgba(45,138,78,.2);color:#4DB86A;border:1px solid rgba(45,138,78,.35)}
+.st-tbc{background:rgba(100,100,100,.2);color:var(--dim);border:1px solid var(--line)}
+
+/* EMPRESAS */
+.emp-list{display:flex;flex-direction:column;gap:6px}
+.emp-item{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.emp-item:last-child{border:none}
+.emp-name{font-size:13px;font-weight:600;color:var(--paper)}
+.emp-role{font-size:11px;color:var(--mute)}
+
+/* CANAL */
+.canal-item{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.canal-item:last-child{border:none}
+.canal-name{font-size:13px;color:var(--dim);min-width:110px}
+.canal-count{font-size:13px;font-weight:700;color:var(--paper);margin-left:auto}
+
+/* BUDGET */
+.budget-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.budget-item:last-child{border:none}
+.budget-cat{font-size:13px;color:var(--dim)}
+.budget-val{font-size:13px;font-weight:700;color:var(--paper)}
+.budget-pct{font-size:11px;color:var(--mute);margin-top:2px}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="tb-brand">DEWESOFT</div>
+  <div class="tb-title">Measurement Conference Brasil 2026 &mdash; Dashboard</div>
+  <div class="tb-ts" id="ts"></div>
+</div>
+
+<!-- COUNTDOWN -->
+<div class="countdown">
+  <div>
+    <div class="cd-num" id="cd-num">—</div>
+    <div class="cd-label">Dias</div>
+  </div>
+  <div class="cd-sep"></div>
+  <div class="cd-info">
+    <h2>Faltam para o evento</h2>
+    <p>29&ndash;30 SET 2026 &nbsp;&middot;&nbsp; Vit&oacute;ria Hotel Convention &nbsp;&middot;&nbsp; Indaiatuba, SP</p>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ── VISAO GERAL ── -->
+<div class="section-label">Vis&atilde;o Geral</div>
+<div class="grid3">
+
+  <!-- Inscritos -->
+  <div class="big-kpi">
+    <div class="bk-label">Inscritos</div>
+    <div class="bk-value"><span id="ins-total">—</span> <span style="font-size:24px;color:var(--dim)">/ <span id="ins-meta">150</span></span></div>
+    <div class="bk-sub">Meta: <span id="ins-meta2">150</span> participantes</div>
+    <div class="bk-bar-wrap" style="margin-top:10px"><div class="bk-bar" id="ins-bar" style="background:var(--or);width:0%"></div></div>
+    <div class="bk-footer"><span id="ins-pct">—</span><span id="ins-rest">— vagas restantes</span></div>
+    <div style="margin-top:12px;display:flex;gap:16px">
+      <div><div style="font-size:10px;color:var(--mute);text-transform:uppercase;letter-spacing:.04em;font-weight:700">Coquetel</div><div style="font-size:20px;font-weight:800;font-family:'Barlow Condensed',sans-serif" id="ins-coq">—</div></div>
+      <div><div style="font-size:10px;color:var(--mute);text-transform:uppercase;letter-spacing:.04em;font-weight:700">Restri&ccedil;&otilde;es</div><div style="font-size:20px;font-weight:800;font-family:'Barlow Condensed',sans-serif" id="ins-rest2">—</div></div>
+    </div>
+  </div>
+
+  <!-- Orcamento -->
+  <div class="big-kpi" style="border-top:3px solid var(--green)">
+    <div class="bk-label">Or&ccedil;amento estimado</div>
+    <div class="bk-value">R$ <span id="bu-total">—</span></div>
+    <div class="bk-sub">Vit&oacute;ria Hotel Convention &middot; Indaiatuba</div>
+    <div style="margin-top:14px;display:flex;flex-direction:column;gap:6px" id="bu-cats"></div>
+  </div>
+
+  <!-- Sinal -->
+  <div class="big-kpi" style="border-top:3px solid var(--yellow)">
+    <div class="bk-label">Sinal pago ao hotel</div>
+    <div class="bk-value">R$ <span id="bu-sinal">—</span></div>
+    <div class="bk-sub">Contrato n&ordm; 16490 &middot; Sinal de 50%</div>
+    <div class="bk-bar-wrap" style="margin-top:10px"><div class="bk-bar" id="sinal-bar" style="background:var(--yellow);width:0%"></div></div>
+    <div class="bk-footer"><span>50% pago</span><span id="sinal-rest">R$ — restante</span></div>
+  </div>
+
+</div>
+
+<!-- ── EMAIL MARKETING ── -->
+<div class="section-label">E-mail Marketing</div>
+<div class="grid4">
+  <div class="kpi-card"><div class="kpi-label">E-mails enviados</div><div class="kpi-value" id="em-enviados">—</div></div>
+  <div class="kpi-card"><div class="kpi-label">Taxa de abertura</div><div class="kpi-value" id="em-abertura">—<span class="unit"> %</span></div></div>
+  <div class="kpi-card"><div class="kpi-label">Cliques &uacute;nicos</div><div class="kpi-value" id="em-cliques">—</div></div>
+  <div class="kpi-card"><div class="kpi-label">Descadastros</div><div class="kpi-value" id="em-unsub">—</div></div>
+</div>
+<div class="grid2">
+  <div class="card">
+    <div class="card-head"><div class="card-title">Desempenho da campanha</div><div class="card-badge" id="em-data-badge">—</div></div>
+    <div class="card-body">
+      <table class="dtable">
+        <thead><tr><th>Campanha</th><th>Enviados</th><th>Abertura</th><th>Cliques</th><th>Bounces</th></tr></thead>
+        <tbody id="em-tabela-body"><tr><td colspan="5" style="text-align:center;color:var(--mute);padding:14px">Sem dados</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-title">Vis&atilde;o r&aacute;pida</div></div>
+    <div class="card-body">
+      <div class="qbar-item"><div class="qbar-head"><span class="qbar-lbl">Aberturas &uacute;nicas</span><span class="qbar-val" id="em-bar-ab-val">—</span></div><div class="qbar-bg"><div class="qbar-fill" id="em-bar-ab" style="background:var(--or);width:0%"></div></div></div>
+      <div class="qbar-item"><div class="qbar-head"><span class="qbar-lbl">Cliques &uacute;nicos</span><span class="qbar-val" id="em-bar-cl-val">—</span></div><div class="qbar-bg"><div class="qbar-fill" id="em-bar-cl" style="background:#B8420A;width:0%"></div></div></div>
+      <div class="qbar-item"><div class="qbar-head"><span class="qbar-lbl">Click-to-open rate</span><span class="qbar-val" id="em-ctor-val">—</span></div><div class="qbar-bg"><div class="qbar-fill" id="em-bar-ctor" style="background:#7A3318;width:0%"></div></div></div>
+      <div class="qbar-item"><div class="qbar-head"><span class="qbar-lbl">Bounces</span><span class="qbar-val" id="em-bar-boun-val">—</span></div><div class="qbar-bg"><div class="qbar-fill" id="em-bar-boun" style="background:#505050;width:0%"></div></div></div>
+      <div class="qbar-item" style="margin:0"><div class="qbar-head"><span class="qbar-lbl">Descadastros</span><span class="qbar-val" id="em-bar-unsub-val">—</span></div><div class="qbar-bg"><div class="qbar-fill" id="em-bar-unsub" style="background:#3A3830;width:0%"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── LINKEDIN ── -->
+<div class="section-label">LinkedIn</div>
+<div class="grid4">
+  <div class="kpi-card"><div class="kpi-label">Total de posts</div><div class="kpi-value" id="li-posts">—</div></div>
+  <div class="kpi-card"><div class="kpi-label">Impress&otilde;es totais</div><div class="kpi-value" id="li-impressoes">—</div></div>
+  <div class="kpi-card"><div class="kpi-label">Engajamentos totais</div><div class="kpi-value" id="li-engajamentos">—</div></div>
+  <div class="kpi-card"><div class="kpi-label">Taxa eng. m&eacute;dia</div><div class="kpi-value" id="li-taxa-eng">—<span class="unit"> %</span></div></div>
+</div>
+<div class="card">
+  <div class="card-head"><div class="card-title">Posts publicados</div><div class="card-badge" id="li-badge">—</div></div>
+  <div class="card-body">
+    <table class="dtable">
+      <thead><tr><th>Post</th><th>Data</th><th>Impress&otilde;es</th><th>Engaj.</th><th>Cliques</th><th>Rea&ccedil;&otilde;es</th></tr></thead>
+      <tbody id="li-tabela-body"><tr><td colspan="6" style="text-align:center;color:var(--mute);padding:14px">Sem dados</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── OPERACIONAL ── -->
+<div class="section-label">Operacional</div>
+<div class="grid2">
+
+  <!-- Checklist -->
+  <div class="card">
+    <div class="card-head"><div class="card-title">Status das tarefas</div><div class="card-badge" id="cl-pct-badge">—</div></div>
+    <div class="card-body">
+      <div class="cl-grid">
+        <div class="cl-item"><div class="cl-val" style="color:#4DB86A" id="cl-conc">—</div><div class="cl-lbl">Conclu&iacute;dos</div></div>
+        <div class="cl-item"><div class="cl-val" style="color:#F1C40F" id="cl-and">—</div><div class="cl-lbl">Em andamento</div></div>
+        <div class="cl-item"><div class="cl-val" style="color:#5D8DF1" id="cl-ag">—</div><div class="cl-lbl">Aguardando</div></div>
+        <div class="cl-item"><div class="cl-val" style="color:var(--dim)" id="cl-af">—</div><div class="cl-lbl">A fazer</div></div>
+        <div class="cl-item"><div class="cl-val" style="color:var(--mute)" id="cl-can">—</div><div class="cl-lbl">Cancelado</div></div>
+        <div class="cl-item"><div class="cl-val" style="color:var(--paper)" id="cl-total">—</div><div class="cl-lbl">Total</div></div>
+      </div>
+      <div class="bk-bar-wrap" style="margin-top:14px"><div class="bk-bar" id="cl-bar" style="background:#4DB86A;width:0%"></div></div>
+      <div style="text-align:center;font-size:11px;color:var(--mute);margin-top:6px" id="cl-pct-label">—</div>
+    </div>
+  </div>
+
+  <!-- Budget -->
+  <div class="card">
+    <div class="card-head"><div class="card-title">Or&ccedil;amento por categoria</div></div>
+    <div class="card-body">
+      <div id="bu-detail"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── INSCRICOES E CONTEUDO ── -->
+<div class="section-label">Inscri&ccedil;&otilde;es e Conte&uacute;do</div>
+<div class="grid3">
+
+  <!-- Empresas -->
+  <div class="card">
+    <div class="card-head"><div class="card-title">Empresas inscritas</div><div class="card-badge" id="emp-badge">—</div></div>
+    <div class="card-body">
+      <div class="emp-list" id="emp-list"></div>
+    </div>
+  </div>
+
+  <!-- Palestrantes -->
+  <div class="card">
+    <div class="card-head"><div class="card-title">Palestrantes confirmados</div></div>
+    <div class="card-body">
+      <div class="sp-list">
+        <div class="sp-item"><div class="sp-avatar">JK</div><div><div class="sp-name">Jure Knez</div><div class="sp-role">President, Dewesoft</div></div><div class="sp-status st-ok">CONFIRMADO</div></div>
+        <div class="sp-item"><div class="sp-avatar">EK</div><div><div class="sp-name">Eva Kalsek</div><div class="sp-role">Hardware Platforms</div></div><div class="sp-status st-ok">CONFIRMADO</div></div>
+        <div class="sp-item"><div class="sp-avatar">MS</div><div><div class="sp-name">Matjaz Strnisa</div><div class="sp-role">Automotive</div></div><div class="sp-status st-ok">CONFIRMADO</div></div>
+        <div class="sp-item"><div class="sp-avatar">SL</div><div><div class="sp-name">Soren Linnet</div><div class="sp-role">NVH</div></div><div class="sp-status st-ok">CONFIRMADO</div></div>
+        <div class="sp-item"><div class="sp-avatar">TP</div><div><div class="sp-name">Teo Podlesnik</div><div class="sp-role">Power</div></div><div class="sp-status st-ok">CONFIRMADO</div></div>
+        <div class="sp-item"><div class="sp-avatar">DO</div><div><div class="sp-name">Denison Oliveira</div><div class="sp-role">Abertura oficial</div></div><div class="sp-status st-ok">CONFIRMADO</div></div>
+        <div class="sp-item"><div class="sp-avatar">PR</div><div><div class="sp-name">Primoz Rome</div><div class="sp-role">Abertura oficial</div></div><div class="sp-status st-ok">CONFIRMADO</div></div>
+        <div class="sp-item"><div class="sp-avatar">?</div><div><div class="sp-name">Casos de uso ADAS / Durabilidade</div><div class="sp-role">Estudo de caso</div></div><div class="sp-status st-tbc">TBC</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Canal captacao -->
+  <div class="card">
+    <div class="card-head"><div class="card-title">Canal de capta&ccedil;&atilde;o</div></div>
+    <div class="card-body" id="canal-body"></div>
+  </div>
+
+</div>
+
+<!-- ── TAREFAS ── -->
+<div class="section-label">Tarefas em aberto</div>
+<div class="grid2">
+  <div class="card">
+    <div class="card-head"><div class="card-title">Em andamento e aguardando</div><div class="card-badge" id="task-badge">—</div></div>
+    <div class="card-body" id="task-and"></div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-title">Pr&oacute;ximos passos</div><div class="card-badge" style="background:rgba(100,100,100,.2);color:var(--dim);border-color:var(--line)" id="task-af-badge">A fazer</div></div>
+    <div class="card-body" id="task-af"></div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ##DADOS_INICIO##
+window.DWS_DADOS = {
+  checklist: {
+    total:      220,
+    concluidos: 20,
+    andamento:  13,
+    aguardando: 2,
+    aFazer:     49,
+    cancelado:  2
+  },
+  budget: {
+    salas:   33300,
+    alim:    153800,
+    hosp:    6960,
+    extras:  4667,
+    total:   198727,
+    sinal:   41650
+  },
+  inscricoes: {
+    total:      33,
+    meta:       150,
+    coquetel:   28,
+    restricoes: 3
+  },
+  linkedin: [
+    {
+      titulo: "DEWESoft MC Brasil 2026 - O Futuro de Testes e Medicoes",
+      data: "13/08/2026",
+      impressoes: 1059,
+      imp_unic: 578,
+      engaj: 145,
+      taxa_eng: 13.70,
+      cliques: 94,
+      taxa_cli: 8.90,
+      reacoes: 38,
+      comentarios: 0,
+      compartilhamentos: 6
+    },
+    {
+      titulo: "O que acontece quando engenharia, tecnologia e conhecimento se encontram?",
+      data: "18/08/2026",
+      impressoes: 115,
+      imp_unic: 52,
+      engaj: 78,
+      taxa_eng: 67.80,
+      cliques: 70,
+      taxa_cli: 60.90,
+      reacoes: 6,
+      comentarios: 0,
+      compartilhamentos: 2
+    }
+  ],
+  emails: [
+    {
+      campanha: "Dewesoft Measurement Conference Brasil 2026",
+      data: "18/08/2026",
+      enviados: 2819,
+      abert_tot: 828,
+      abert_unic: 737,
+      abert_pct: 26.29,
+      cli_tot: 375,
+      cli_unic: 97,
+      cli_pct: 3.44,
+      ctor: 13.09,
+      unsub: 4,
+      unsub_pct: 0.14,
+      bounces: 70,
+      bounces_pct: 2.48
+    }
+  ],
+  empresas: [
+    {nome:"Volkswagen Truck & Bus", setor:"AUTO", cargo:"Eng. Produto"},
+    {nome:"Mercedes-Benz do Brasil", setor:"AUTO", cargo:"Eng. NVH"},
+    {nome:"TRATON R&D Brazil", setor:"AUTO", cargo:"Eng. Produto"},
+    {nome:"Pirelli (x2)", setor:"AUTO", cargo:"Eng. Testes"},
+    {nome:"IAV do Brasil", setor:"AUTO", cargo:"Analista Testes"},
+    {nome:"John Deere", setor:"IND", cargo:"Engenheiro"},
+    {nome:"WEG Equipamentos", setor:"IND", cargo:"Tecnico"},
+    {nome:"Embraer", setor:"AERO", cargo:"Tec. Ensaios"},
+    {nome:"ITA", setor:"ACAD", cargo:"Professor"},
+    {nome:"Mackenzie", setor:"ACAD", cargo:"Prof. & Pesq."}
+  ],
+  canais: [
+    {nome:"E-mail", n:4},
+    {nome:"LinkedIn", n:2},
+    {nome:"Indicacao", n:2},
+    {nome:"Newsletter", n:1},
+    {nome:"Representante", n:1},
+    {nome:"Outros", n:4}
+  ],
+  tarefas_and: [
+    {texto:"Confirmar cases ADAS e Durabilidade", sub:"Palestrantes", status:"andamento"},
+    {texto:"Briefing palestrantes internacionais", sub:"Conteudo", status:"andamento"},
+    {texto:"Producao dos crachas", sub:"Producao", status:"andamento"},
+    {texto:"Kits participantes — montagem", sub:"Producao", status:"andamento"},
+    {texto:"Aprovacao arte banners", sub:"Comunicacao", status:"andamento"},
+    {texto:"Confirmar AV e tecnico", sub:"Operacional", status:"aguardando"},
+    {texto:"Sinalização das salas Dia 2", sub:"Producao", status:"aguardando"}
+  ],
+  tarefas_af: [
+    {texto:"Run of Show completo", sub:"Operacional"},
+    {texto:"Credenciamento — sistema e lista", sub:"Inscricoes"},
+    {texto:"Email 2 — programacao completa", sub:"Comunicacao"},
+    {texto:"Posts LinkedIn — speakers", sub:"Redes Sociais"},
+    {texto:"Contagem regressiva D-10", sub:"Comunicacao"},
+    {texto:"Briefing do staffing", sub:"Logistica"},
+    {texto:"Confirmar alimentacao — cardapios", sub:"Alimentacao"}
+  ]
+};
+// ##DADOS_FIM##
+
+(function(){
+  const D = window.DWS_DADOS;
+
+  // Countdown
+  const ev = new Date('2026-09-29T08:00:00');
+  const hoje = new Date();
+  const dias = Math.ceil((ev - hoje) / 86400000);
+  document.getElementById('cd-num').textContent = dias > 0 ? dias : 0;
+  document.getElementById('ts').textContent = 'Atualizado: ' + hoje.toLocaleDateString('pt-BR') + ' ' + hoje.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+
+  // Inscritos
+  const ins = D.inscricoes;
+  const pct = (ins.total / ins.meta * 100).toFixed(1);
+  document.getElementById('ins-total').textContent = ins.total;
+  document.getElementById('ins-meta').textContent  = ins.meta;
+  document.getElementById('ins-meta2').textContent = ins.meta;
+  document.getElementById('ins-pct').textContent   = pct + '% atingido';
+  document.getElementById('ins-rest').textContent  = (ins.meta - ins.total) + ' vagas restantes';
+  document.getElementById('ins-coq').textContent   = ins.coquetel;
+  document.getElementById('ins-rest2').textContent = ins.restricoes;
+  setTimeout(()=>{ document.getElementById('ins-bar').style.width = Math.min(100,pct) + '%'; },100);
+
+  // Budget
+  const bu = D.budget;
+  document.getElementById('bu-total').textContent = bu.total.toLocaleString('pt-BR');
+  document.getElementById('bu-sinal').textContent = bu.sinal.toLocaleString('pt-BR');
+  const sinalPct = (bu.sinal / bu.total * 100).toFixed(0);
+  setTimeout(()=>{ document.getElementById('sinal-bar').style.width = sinalPct + '%'; },100);
+  document.getElementById('sinal-rest').textContent = 'R$ ' + bu.sinal.toLocaleString('pt-BR') + ' restante';
+
+  const cats = [
+    {nome:'Salas / Venue', val:bu.salas, cor:'#F15D2D'},
+    {nome:'Alimentacao', val:bu.alim, cor:'#B8420A'},
+    {nome:'Hospedagem', val:bu.hosp, cor:'#7A3318'},
+    {nome:'Extras', val:bu.extras, cor:'#505050'}
+  ];
+  document.getElementById('bu-cats').innerHTML = cats.map(c=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--line)">
+      <span style="font-size:12px;color:var(--dim)">${c.nome}</span>
+      <span style="font-size:13px;font-weight:700;color:var(--paper)">R$ ${c.val.toLocaleString('pt-BR')}</span>
+    </div>`).join('');
+
+  document.getElementById('bu-detail').innerHTML = cats.map(c=>{
+    const p = (c.val/bu.total*100).toFixed(1);
+    return `<div class="budget-item">
+      <div><div class="budget-cat">${c.nome}</div><div class="budget-pct">${p}% do total</div></div>
+      <div class="budget-val">R$ ${c.val.toLocaleString('pt-BR')}</div>
+    </div>`;
+  }).join('') + `<div class="budget-item" style="margin-top:4px;padding-top:10px;border-top:2px solid var(--line);border-bottom:none">
+    <div style="font-size:13px;font-weight:700;color:var(--paper)">TOTAL ESTIMADO</div>
+    <div style="font-size:15px;font-weight:900;color:var(--or)">R$ ${bu.total.toLocaleString('pt-BR')}</div>
+  </div>`;
+
+  // Checklist
+  const cl = D.checklist;
+  document.getElementById('cl-total').textContent = cl.total;
+  document.getElementById('cl-conc').textContent  = cl.concluidos;
+  document.getElementById('cl-and').textContent   = cl.andamento;
+  document.getElementById('cl-ag').textContent    = cl.aguardando;
+  document.getElementById('cl-af').textContent    = cl.aFazer;
+  document.getElementById('cl-can').textContent   = cl.cancelado;
+  const clPct = Math.round(cl.concluidos/cl.total*100);
+  document.getElementById('cl-pct-badge').textContent = clPct + '% concluido';
+  document.getElementById('cl-pct-label').textContent = clPct + '% concluido';
+  setTimeout(()=>{ document.getElementById('cl-bar').style.width = clPct + '%'; },100);
+
+  // Emails
+  const ems = D.emails || [];
+  if(ems.length > 0){
+    const tot = ems.reduce((s,e)=>s+e.enviados,0);
+    const totCli = ems.reduce((s,e)=>s+e.cli_unic,0);
+    const totUnsub = ems.reduce((s,e)=>s+e.unsub,0);
+    const avgAb = ems.reduce((s,e)=>s+e.abert_pct*e.enviados,0)/tot;
+    document.getElementById('em-enviados').textContent = tot.toLocaleString('pt-BR');
+    document.getElementById('em-abertura').textContent = avgAb.toFixed(1);
+    document.getElementById('em-cliques').textContent  = totCli;
+    document.getElementById('em-unsub').textContent    = totUnsub;
+    const ult = ems[ems.length-1];
+    document.getElementById('em-data-badge').textContent = ult.data;
+    document.getElementById('em-tabela-body').innerHTML = ems.map(e=>`
+      <tr>
+        <td class="wh">${e.campanha}<br><small style="color:var(--mute)">${e.data} &middot; ${e.enviados.toLocaleString('pt-BR')} enviados</small></td>
+        <td class="or">${e.abert_pct.toFixed(1)}%</td>
+        <td>${e.cli_unic}</td>
+        <td>${e.bounces_pct.toFixed(1)}%</td>
+      </tr>`).join('')+`<tr><td colspan="5" style="font-size:10px;color:var(--mute)">Fonte: aba Emails do MASTER.xlsm</td></tr>`;
+    const ref = ems[0];
+    const pOf=(v,t)=>t>0?Math.min(100,(v/t*100)).toFixed(1):0;
+    document.getElementById('em-bar-ab-val').textContent   = ref.abert_unic+' ('+ref.abert_pct.toFixed(1)+'%)';
+    document.getElementById('em-bar-cl-val').textContent   = ref.cli_unic+' ('+ref.cli_pct.toFixed(1)+'%)';
+    document.getElementById('em-ctor-val').textContent     = ref.ctor.toFixed(1)+'%';
+    document.getElementById('em-bar-boun-val').textContent = ref.bounces+' ('+ref.bounces_pct.toFixed(1)+'%)';
+    document.getElementById('em-bar-unsub-val').textContent= ref.unsub+' ('+ref.unsub_pct.toFixed(2)+'%)';
+    setTimeout(()=>{
+      document.getElementById('em-bar-ab').style.width   = pOf(ref.abert_unic,ref.enviados)+'%';
+      document.getElementById('em-bar-cl').style.width   = pOf(ref.cli_unic,ref.enviados)+'%';
+      document.getElementById('em-bar-ctor').style.width = Math.min(100,ref.ctor*2).toFixed(1)+'%';
+      document.getElementById('em-bar-boun').style.width = pOf(ref.bounces,ref.enviados)+'%';
+      document.getElementById('em-bar-unsub').style.width= pOf(ref.unsub,ref.enviados)+'%';
+    },100);
+  }
+
+  // LinkedIn
+  const li = D.linkedin || [];
+  if(li.length > 0){
+    const totImp = li.reduce((s,p)=>s+p.impressoes,0);
+    const totEng = li.reduce((s,p)=>s+p.engaj,0);
+    const avgEng = li.reduce((s,p)=>s+p.taxa_eng*p.impressoes,0)/totImp;
+    document.getElementById('li-posts').textContent       = li.length;
+    document.getElementById('li-impressoes').textContent  = totImp.toLocaleString('pt-BR');
+    document.getElementById('li-engajamentos').textContent= totEng;
+    document.getElementById('li-taxa-eng').textContent    = avgEng.toFixed(1);
+    document.getElementById('li-badge').textContent       = li.length+' posts';
+    document.getElementById('li-tabela-body').innerHTML = li.map(p=>`
+      <tr>
+        <td class="wh" style="max-width:280px">${p.titulo}</td>
+        <td style="white-space:nowrap">${p.data}</td>
+        <td class="or">${p.impressoes.toLocaleString('pt-BR')}</td>
+        <td>${p.engaj} <small style="color:var(--mute)">(${p.taxa_eng.toFixed(1)}%)</small></td>
+        <td>${p.cliques}</td>
+        <td>${p.reacoes}</td>
+      </tr>`).join('')+`<tr><td colspan="6" style="font-size:10px;color:var(--mute)">Fonte: aba LinkedIn do MASTER.xlsm</td></tr>`;
+  }
+
+  // Empresas
+  const emps = D.empresas || [];
+  document.getElementById('emp-badge').textContent = emps.length+' empresas';
+  const setorCls = {AUTO:'tag-auto',IND:'tag-ind',AERO:'tag-aero',ACAD:'tag-acad'};
+  document.getElementById('emp-list').innerHTML = emps.map(e=>`
+    <div class="emp-item">
+      <span class="tag ${setorCls[e.setor]||''}">${e.setor}</span>
+      <div><div class="emp-name">${e.nome}</div><div class="emp-role">${e.cargo}</div></div>
+    </div>`).join('');
+
+  // Canal
+  const canais = D.canais || [];
+  const totCan = canais.reduce((s,c)=>s+c.n,0);
+  document.getElementById('canal-body').innerHTML = canais.map(c=>`
+    <div class="canal-item">
+      <span class="canal-name">${c.nome}</span>
+      <div style="flex:1;margin:0 10px"><div class="bar-wrap"><div class="bar" style="background:var(--or);width:${(c.n/totCan*100).toFixed(0)}%"></div></div></div>
+      <span class="canal-count">${c.n}</span>
+    </div>`).join('');
+
+  // Tarefas
+  const ta = D.tarefas_and || [];
+  document.getElementById('task-badge').textContent = ta.length+' itens ativos';
+  document.getElementById('task-and').innerHTML = ta.map(t=>`
+    <div class="task-item">
+      <div class="task-dot" style="background:${t.status==='andamento'?'#F1C40F':'#5D8DF1'}"></div>
+      <div><div class="task-text">${t.texto}</div><div class="task-sub">${t.sub}</div></div>
+      <span class="task-badge ${t.status==='andamento'?'badge-and':'badge-ag'}">${t.status==='andamento'?'Em andamento':'Aguardando'}</span>
+    </div>`).join('');
+
+  const tf = D.tarefas_af || [];
+  document.getElementById('task-af').innerHTML = tf.map(t=>`
+    <div class="task-item">
+      <div class="task-dot" style="background:var(--mute)"></div>
+      <div><div class="task-text">${t.texto}</div><div class="task-sub">${t.sub}</div></div>
+    </div>`).join('');
+
+})();
+</script>
+</body>
+</html>
